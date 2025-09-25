@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Banking Application</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f7fa;
+    }
+    header {
+      background: #004481;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .accounts {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.03);
+    }
+    .card h3 {
+      margin: 0;
+      color: #004481;
+    }
+    .balance {
+      font-weight: bold;
+      color: #008000;
+      margin: 10px 0;
+    }
+    .features {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #444;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px;
+      background: #004481;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #0066cc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏦 MyBank Application</h1>
+    <p>Manage your accounts securely</p>
+  </header>
+
+  <section class="accounts" id="accounts"></section>
+
+  <script>
+    // -------- FACTORY DESIGN PATTERN --------
+    class Account {
+      constructor(type, balance, features) {
+        this.type = type;
+        this.balance = balance;
+        this.features = features;
+      }
+      render() {
+        return `
+          <div class="card">
+            <h3>${this.type} Account</h3>
+            <p class="balance">Balance: ₹${this.balance}</p>
+            <div class="features">
+              <ul>
+                ${this.features.map(f => `<li>${f}</li>`).join('')}
+              </ul>
+            </div>
+            <a href="#" class="btn">View Details</a>
+          </div>
+        `;
+      }
+    }
+
+    // Factory Class
+    class AccountFactory {
+      static createAccount(type) {
+        switch(type) {
+          case "savings":
+            return new Account("Savings", 25000, [
+              "Earn 4% annual interest",
+              "Free ATM withdrawals",
+              "Mobile & Net Banking"
+            ]);
+          case "current":
+            return new Account("Current", 100000, [
+              "Overdraft facility available",
+              "High transaction limits",
+              "Priority customer support"
+            ]);
+          case "loan":
+            return new Account("Loan", -500000, [
+              "Low EMI options",
+              "Flexible repayment period",
+              "Online loan management"
+            ]);
+          case "fixedDeposit":
+            return new Account("Fixed Deposit", 75000, [
+              "7% fixed annual interest",
+              "Safe & secure investment",
+              "Premature withdrawal option"
+            ]);
+          default:
+            return new Account("General", 0, [
+              "Basic banking services",
+              "Easy account setup"
+            ]);
+        }
+      }
+    }
+
+    // Generate Accounts using Factory
+    const accountTypes = ["savings", "current", "loan", "fixedDeposit"];
+    const accounts = document.getElementById("accounts");
+
+    accountTypes.forEach(type => {
+      const acc = AccountFactory.createAccount(type);
+      accounts.innerHTML += acc.render();
+    });
+  </script>
+</body>
+</html>
